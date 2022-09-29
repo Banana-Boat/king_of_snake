@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import PKView from "@/views/pk/PKView.vue";
+import { defineAsyncComponent } from "vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,17 +18,22 @@ const router = createRouter({
     {
       path: "/rank-list/",
       name: "rankList",
-      component: import("@/views/rank-list/RankListView.vue"),
+      component: defineAsyncComponent(
+        () => import("@/views/rank-list/RankListView.vue")
+      ),
     },
     {
       path: "/record/",
       name: "record",
-      component: import("@/views/record/RecordView.vue"),
+      component: defineAsyncComponent(
+        () => import("@/views/record/RecordView.vue")
+      ),
     },
     {
       path: "/404/",
       name: "404",
-      component: () => import("@/views/NotFoundView.vue"),
+      component: () =>
+        defineAsyncComponent(() => import("@/views/NotFoundView.vue")),
     },
     {
       path: "/:catchAll(.*)",

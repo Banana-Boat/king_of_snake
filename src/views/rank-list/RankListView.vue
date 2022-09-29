@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import ViewContainer from "../../components/view-container/ViewContainer.vue";
 import { onBeforeMount, reactive, ref } from "vue";
-import { User } from "./types";
+import type { User } from "./types";
 import { getRankListData } from "./apis";
 import { ElMessage } from "element-plus";
 
@@ -59,9 +59,11 @@ const updateRankListData = async (page: number) => {
   try {
     isLoading.value = true;
     const res = await getRankListData(page);
-    rankListData.value = res.users;
-    pagination.cur = page;
-    pagination.total = res.users_count;
+    if (res) {
+      rankListData.value = res.users;
+      pagination.cur = page;
+      pagination.total = res.users_count;
+    }
   } catch {
     rankListData.value = [];
     pagination.cur = 1;

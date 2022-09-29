@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import ViewContainer from "../../components/view-container/ViewContainer.vue";
 import { onBeforeMount, reactive, ref } from "vue";
-import { Record } from "./types";
+import type { Record } from "./types";
 import { getRecordData } from "./apis";
 import { ElMessage } from "element-plus";
 
@@ -98,9 +98,11 @@ const updateRecordData = async (page: number) => {
   try {
     isLoading.value = true;
     const res = await getRecordData(page);
-    recordData.value = res.records;
-    pagination.cur = page;
-    pagination.total = res.records_count;
+    if (res) {
+      recordData.value = res.records;
+      pagination.cur = page;
+      pagination.total = res.records_count;
+    }
   } catch {
     recordData.value = [];
     pagination.cur = 1;

@@ -54,7 +54,8 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { ElMessage, FormInstance, FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
 import { register } from "../../../utils/loginAPIs";
 
 const { isShow, closeHandle } = defineProps<{
