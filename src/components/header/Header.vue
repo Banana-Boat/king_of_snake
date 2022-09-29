@@ -10,10 +10,10 @@
     <nav class="nav-bar">
       <div
         class="nav-item"
-        v-for="(nav, idx) in navList"
+        v-for="nav in navList"
         :key="nav.name"
-        :class="{ 'nav-item-active': idx === activeNavIdx }"
-        @click="navClickHandle(idx, nav)"
+        :class="{ 'nav-item-active': nav.path === activeNavPath }"
+        @click="navClickHandle(nav)"
       >
         <span>{{ nav.name }}</span>
       </div>
@@ -21,7 +21,6 @@
     <el-button-group v-if="!userStore.isLogin" class="btn-group">
       <el-button
         @click="() => (isShowLoginDrawer = true)"
-        size="large"
         color="#6842ff"
         round
         style="border-right: #ffffff21 solid 2px"
@@ -30,7 +29,6 @@
       </el-button>
       <el-button
         @click="() => (isShowRegisterDrawer = true)"
-        size="large"
         color="#6842ff"
         round
       >
@@ -55,40 +53,38 @@
 
 <script setup lang="ts">
 import { ElMessage } from "element-plus";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeRouteUpdate, useRouter } from "vue-router";
 import { useUserStore } from "../../stores/user.store";
 import LoginDrawer from "./components/LoginDrawer.vue";
 import RegisterDrawer from "./components/RegisterDrawer.vue";
 
 interface INav {
   name: string;
-  to: string;
+  path: string;
 }
 const router = useRouter();
 const userStore = useUserStore();
 const isShowLoginDrawer = ref(false); // 是否展示登录抽屉
 const isShowRegisterDrawer = ref(false); // 是否展示注册抽屉
-
-const activeNavIdx = ref(0); // 当前选中的nav下标
+const activeNavPath = computed(() => router.currentRoute.value.path); // 当前选中的nav
 const navList = ref<INav[]>([
   {
     name: "对战",
-    to: "/pk/",
+    path: "/pk/",
   },
   {
     name: "排行榜",
-    to: "/rank-list/",
+    path: "/rank-list/",
   },
   {
     name: "对局记录",
-    to: "/record/",
+    path: "/record/",
   },
 ]);
 
-const navClickHandle = (idx: number, nav: INav) => {
-  activeNavIdx.value = idx;
-  router.push(nav.to);
+const navClickHandle = (nav: INav) => {
+  router.push(nav.path);
 };
 
 const logout = () => {

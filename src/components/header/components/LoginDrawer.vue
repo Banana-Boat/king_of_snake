@@ -35,7 +35,6 @@
       <el-button
         @click="onSubmit(formRef)"
         color="#6842ff"
-        size="large"
         round
         class="login-btn"
         :loading="isLoginBtnLoading"
@@ -125,8 +124,8 @@ const onSubmit = (form: FormInstance | undefined) => {
 }
 
 .login-btn {
-  width: 70%;
-  margin: 20px 15%;
+  width: 50%;
+  margin: 40px 25% 30px;
   font-size: 16px;
 }
 

@@ -6,7 +6,7 @@
         <span>{{ userStore.name ? userStore.name : "---" }}</span>
       </div>
       <div>
-        <img style="width: 90px" src="@/assets/images/vs.png" />
+        <img style="width: 80px" src="@/assets/images/vs.png" />
       </div>
       <div class="player">
         <img src="@/assets/images/unknown.png" />
@@ -55,7 +55,7 @@ const matchBtnClickHandle = () => {
   width: 160px;
 }
 .match-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
   transition-timing-function: ease-out;
 }
 
@@ -72,7 +72,7 @@ const matchBtnClickHandle = () => {
   align-items: center;
 }
 .player img {
-  width: 160px;
-  margin-bottom: 20px;
+  width: 155px;
+  margin-bottom: 25px;
 }
 </style>

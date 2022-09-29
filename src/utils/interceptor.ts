@@ -31,7 +31,7 @@ instance.interceptors.response.use(
   (response) => {
     const { error_message: msg } = response.data;
 
-    if (msg !== "success") {
+    if (msg && msg !== "success") {
       ElMessage.error(msg);
       return false;
     }
