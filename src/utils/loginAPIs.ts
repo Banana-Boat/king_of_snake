@@ -2,28 +2,28 @@ import axios from "@/utils/interceptor";
 import { useUserStore } from "@/stores/user.store";
 import { ElMessage } from "element-plus";
 
-interface loginRequest {
+interface LoginRequest {
   username: string;
   password: string;
 }
 
-interface loginResponse {
+interface LoginResponse {
   token: string;
 }
 
-interface registerRequest {
+interface RegisterRequest {
   username: string;
   password: string;
   confirmedPassword: string;
 }
 
-interface getInfoResponse {
+interface GetInfoResponse {
   id: string;
   username: string;
 }
 
 export const getUserInfo = async () =>
-  axios.get<any, getInfoResponse>("/user/account/info/").then((res) => {
+  axios.get<any, GetInfoResponse>("/user/account/info/").then((res) => {
     if (res) {
       const { id, username } = res;
       const userStore = useUserStore();
@@ -36,9 +36,9 @@ export const getUserInfo = async () =>
     }
   });
 
-export const login = async (params: loginRequest) =>
+export const login = async (params: LoginRequest) =>
   axios
-    .post<loginRequest, loginResponse>("/user/account/token/", params)
+    .post<LoginRequest, LoginResponse>("/user/account/token/", params)
     .then(async (res) => {
       if (res) {
         const userStore = useUserStore();
@@ -51,9 +51,9 @@ export const login = async (params: loginRequest) =>
       }
     });
 
-export const register = async (params: registerRequest) =>
+export const register = async (params: RegisterRequest) =>
   axios
-    .post<registerRequest, any>("/user/account/register/", params)
+    .post<RegisterRequest, any>("/user/account/register/", params)
     .then((res) => {
       if (res) return true;
     });

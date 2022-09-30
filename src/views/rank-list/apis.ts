@@ -1,14 +1,14 @@
 import axios from "@/utils/interceptor";
 import type { User } from "./types";
 
-interface getRankListDataResponse {
+interface GetRankListDataResponse {
   users: User[];
   users_count: number;
 }
 
 export const getRankListData = (params: number) =>
   axios
-    .get<number, getRankListDataResponse>("/ranklist/getlist/", {
+    .get<number, GetRankListDataResponse>("/ranklist/getlist/", {
       params: {
         page: params,
       },

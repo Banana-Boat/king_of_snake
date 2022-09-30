@@ -1,14 +1,14 @@
 import axios from "@/utils/interceptor";
 import type { Record } from "./types";
 
-interface getRecordDataResponse {
+interface GetRecordDataResponse {
   records: Record[];
   records_count: number;
 }
 
 export const getRecordData = (params: number) =>
   axios
-    .get<number, getRecordDataResponse>("/record/getlist/", {
+    .get<number, GetRecordDataResponse>("/record/getlist/", {
       params: {
         page: params,
       },

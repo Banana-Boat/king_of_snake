@@ -27,13 +27,18 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;游戏存在平局，胜利方加3分，失败方减3分，平局则双方各加1分。
       </p>
     </el-popover>
-    <MatchArea />
+    <MatchArea v-if="pkStore.status === StatusType.MATCHING" />
+    <GameArea v-else />
   </ViewContainer>
 </template>
 
 <script setup lang="ts">
-import MatchArea from "./components/MatchArea.vue";
 import ViewContainer from "../../components/view-container/ViewContainer.vue";
+import MatchArea from "./components/MatchArea.vue";
+import GameArea from "./components/GameArea.vue";
+import { usePkStore, StatusType } from "../../stores/pk.store";
+
+const pkStore = usePkStore();
 </script>
 
 <style scoped></style>
