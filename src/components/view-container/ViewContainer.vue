@@ -20,7 +20,7 @@
 .content {
   display: flex;
   position: relative;
-  width: 65%;
+  width: 70%;
   overflow-y: auto;
   padding: 30px;
 

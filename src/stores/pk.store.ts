@@ -1,5 +1,6 @@
 import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
+import { DirectionType } from "@/components/game-map/game-object/snake/type";
 
 export const enum StatusType {
   MATCHING,
@@ -16,11 +17,13 @@ export const usePkStore = defineStore("pk", () => {
     id: 0,
     sx: 0,
     sy: 0,
+    direction: DirectionType.NONE,
   });
   const playerBInfo = reactive({
     id: 0,
     sx: 0,
     sy: 0,
+    direction: DirectionType.NONE,
   });
   const loser = ref("");
 

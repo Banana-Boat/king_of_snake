@@ -157,8 +157,8 @@ export class Snake extends BaseGameObject {
     this.status = SnakeStatusType.MOVE;
     this.curStep++;
 
-    for (let i = this.cellList.length; i > 0; i--)
-      this.cellList[i] = JSON.parse(JSON.stringify(this.cellList[i - 1]));
+    // 插入一个待移动的头结点
+    this.cellList.splice(0, 0, JSON.parse(JSON.stringify(this.cellList[0])));
 
     // 如果撞墙则死亡
     if (!this.gameMap.isTargetCellValid(this.nextCell))

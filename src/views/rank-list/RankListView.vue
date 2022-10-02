@@ -2,7 +2,7 @@
   <ViewContainer>
     <img
       @click="updateRankListData(1)"
-      src="@/assets/images/refresh.svg"
+      src="@/assets/icons/refresh.svg"
       class="refresh-icon"
     />
     <div class="main">
