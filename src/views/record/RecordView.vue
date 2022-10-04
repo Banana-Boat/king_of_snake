@@ -140,15 +140,15 @@ const stringTo2D = (map: string): boolean[][] => {
   for (let i = 0, k = 0; i < 13; i++) {
     let line = [];
     for (let j = 0; j < 14; j++, k++) {
-      if (map[k] === "0") line.push(0);
-      else line.push(1);
+      if (map[k] === "0") line.push(false);
+      else line.push(true);
     }
     g.push(line);
   }
   return g;
 };
 
-const replayBtnClickHandle = (recordId) => {
+const replayBtnClickHandle = (recordId: number) => {
   const record = recordData.value.find((item) => item.record.id === recordId);
   if (!record) return;
 

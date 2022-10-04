@@ -9,14 +9,16 @@ import { onMounted, ref } from "vue";
 import { GameMap } from "./game-object/GameMap";
 import { usePkStore } from "../../stores/pk/pk.store";
 
-const parentNodeRef = ref<HTMLDivElement>(null);
-const canvasNodeRef = ref<HTMLCanvasElement>(null);
+const parentNodeRef = ref<HTMLDivElement>();
+const canvasNodeRef = ref<HTMLCanvasElement>();
 
 const pkStore = usePkStore();
 
 onMounted(() => {
+  if (!parentNodeRef.value || !canvasNodeRef.value) return;
+
   const gameMapObject = new GameMap(
-    canvasNodeRef.value.getContext("2d"),
+    canvasNodeRef.value.getContext("2d") as CanvasRenderingContext2D,
     parentNodeRef.value
   );
   pkStore.gameMapObject = gameMapObject;
