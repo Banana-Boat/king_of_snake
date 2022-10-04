@@ -1,5 +1,6 @@
 <template>
   <svg
+    v-show="direction !== DirectionType.NONE"
     :style="{
       transform: `rotate(${directionMap.get(direction)}deg)`,
     }"
@@ -22,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue-demi";
 import { DirectionType } from "../../components/game-map/game-object/snake/type";
 
 const { color, direction } = defineProps<{

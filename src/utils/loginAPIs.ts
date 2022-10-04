@@ -1,5 +1,5 @@
 import axios from "@/utils/interceptor";
-import { useUserStore } from "@/stores/user.store";
+import { useUserStore } from "@/stores/user/user.store";
 import { ElMessage } from "element-plus";
 
 interface LoginRequest {
@@ -45,7 +45,7 @@ export const login = async (params: LoginRequest) =>
         const { token } = res;
 
         userStore.token = token;
-        localStorage.setItem("jwt_token", token);
+        sessionStorage.setItem("jwt_token", token);
 
         return await getUserInfo();
       }

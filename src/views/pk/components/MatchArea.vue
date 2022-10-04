@@ -8,37 +8,59 @@
       <div>
         <img style="width: 80px" src="@/assets/images/vs.png" />
       </div>
-      <div class="player">
+      <div class="player" v-loading="pkStore.status === PkStatusType.MATCHING">
         <img src="@/assets/images/unknown.png" />
-        <span>未知玩家</span>
+        <span>{{ rivalName }}</span>
       </div>
     </div>
     <el-button
-      @click="matchBtnClickHandle"
+      @click="matchBtnHandle"
       class="match-btn"
       size="large"
       color="#6842ff"
       round
     >
-      开始匹配
+      {{ btnText }}
     </el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "../../../stores/user.store";
+import { useUserStore } from "../../../stores/user/user.store";
+import { usePkStore } from "../../../stores/pk/pk.store";
 import { ElMessage } from "element-plus";
+import { computed } from "vue-demi";
+import { socketUrl } from "../constans";
+import { PkSocket } from "../PkSocket";
+import { PkStatusType } from "../../../stores/pk/types";
 
 const userStore = useUserStore();
+const pkStore = usePkStore();
+const btnText = computed(() => {
+  return pkStore.status === PkStatusType.MATCHING ? "取消匹配" : "开始匹配";
+});
+const rivalName = computed(() => {
+  return pkStore.rivalName === "" ? "未知对手" : pkStore.rivalName;
+});
 
-const matchBtnClickHandle = () => {
+let pkSocket: PkSocket;
+
+const matchBtnHandle = () => {
+  // 尚未登录
   if (!userStore.isLogin) {
-    return ElMessage({
+    ElMessage({
       message: "您还未登录，请先登录！",
       type: "error",
       duration: 2000,
     });
+    return;
   }
+
+  // 已经登录
+  const socket = new WebSocket(socketUrl + userStore.token + "/");
+  pkSocket = new PkSocket(socket);
+
+  pkSocket.matchBtnHandle();
 };
 </script>
 

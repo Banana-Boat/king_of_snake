@@ -7,11 +7,11 @@
 import Header from "./components/header/Header.vue";
 import { RouterView } from "vue-router";
 import { getUserInfo } from "./utils/loginAPIs";
-import { useUserStore } from "./stores/user.store";
+import { useUserStore } from "./stores/user/user.store";
 
 const userStore = useUserStore();
 
-const token = localStorage.getItem("jwt_token");
+const token = sessionStorage.getItem("jwt_token");
 if (token) {
   userStore.token = token;
   try {

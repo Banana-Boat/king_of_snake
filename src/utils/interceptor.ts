@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/user.store";
+import { useUserStore } from "@/stores/user/user.store";
 
 const instance = axios.create({
   baseURL: "https://app2703.acapp.acwing.com.cn/api",

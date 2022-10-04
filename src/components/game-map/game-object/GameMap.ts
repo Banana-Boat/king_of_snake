@@ -2,12 +2,16 @@ import { BaseGameObject } from "./BaseGameObject";
 import { Wall } from "./Wall";
 import { snake0Color, snake1Color, mapColor } from "./colors";
 import { Snake } from "./snake/Snake";
-import { DirectionType, SnakeStatusType } from "./snake/type";
+import { DirectionType, SnakePkStatusType } from "./snake/type";
 import type { SnakeCell } from "./snake/SnakeCell";
+import { usePkStore } from "@/stores/pk/pk.store";
+import type { Store } from "pinia";
+import type { IPkAction, IPkState } from "@/stores/pk/types";
 
 export class GameMap extends BaseGameObject {
   ctx: CanvasRenderingContext2D; // 画布结点
   parent: HTMLDivElement; // 画布的父结点
+  pkStore: Store<string, IPkState, {}, IPkAction>;
 
   pxPerGrid: number; // 一个格子所占的像素值
   cols: number; // 地图所占列数
@@ -24,6 +28,7 @@ export class GameMap extends BaseGameObject {
 
     this.ctx = ctx;
     this.parent = parent;
+    this.pkStore = usePkStore();
     this.pxPerGrid = 0;
     this.cols = 14;
     this.rows = 13;
@@ -37,8 +42,7 @@ export class GameMap extends BaseGameObject {
   }
 
   start() {
-    for (let i = 0; i < 1000; i++) if (this.createWalls()) break;
-
+    this.createWalls();
     this.addKeyEventListener();
   }
 
@@ -78,40 +82,8 @@ export class GameMap extends BaseGameObject {
 
   // 创建墙
   createWalls() {
-    const g: boolean[][] = [];
-    for (let r = 0; r < this.rows; r++) {
-      g[r] = [];
-      for (let c = 0; c < this.cols; c++) {
-        g[r][c] = false;
-      }
-    }
-
-    // 给四周加上障碍物
-    for (let r = 0; r < this.rows; r++) {
-      g[r][0] = g[r][this.cols - 1] = true;
-    }
-
-    for (let c = 0; c < this.cols; c++) {
-      g[0][c] = g[this.rows - 1][c] = true;
-    }
-
-    // 创建随机障碍物
-    for (let i = 0; i < this.innerWallCount / 2; i++) {
-      for (let j = 0; j < 1000; j++) {
-        let r = Math.floor(Math.random() * this.rows);
-        let c = Math.floor(Math.random() * this.cols);
-        if (g[r][c] || g[this.rows - 1 - r][this.cols - 1 - c]) continue;
-        if ((r == this.rows - 2 && c == 1) || (r == 1 && c == this.cols - 2))
-          continue;
-
-        g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = true;
-        break;
-      }
-    }
-
-    const copy_g = JSON.parse(JSON.stringify(g));
-    if (!this.isConnected(copy_g, this.rows - 2, 1, 1, this.cols - 2))
-      return false;
+    const g = this.pkStore.gameMap;
+    if (!g) return;
 
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
@@ -124,53 +96,32 @@ export class GameMap extends BaseGameObject {
     return true;
   }
 
-  // 判断墙的连通性
-  isConnected(g: true[][], sx: number, sy: number, tx: number, ty: number) {
-    if (sx == tx && sy == ty) return true;
-    g[sx][sy] = true;
-
-    let dx = [-1, 0, 1, 0],
-      dy = [0, 1, 0, -1];
-    for (let i = 0; i < 4; i++) {
-      let x = sx + dx[i],
-        y = sy + dy[i];
-      if (!g[x][y] && this.isConnected(g, x, y, tx, ty)) return true;
-    }
-
-    return false;
-  }
-
   // 添加键盘监听事件
   addKeyEventListener() {
     this.ctx.canvas.focus();
 
-    const [snake0, snake1] = this.snakeList;
     this.ctx.canvas.addEventListener("keydown", (e) => {
+      let direction = DirectionType.NONE;
       switch (e.key) {
         case "w":
-          snake0.direction = DirectionType.UP;
+          direction = DirectionType.UP;
           break;
         case "d":
-          snake0.direction = DirectionType.RIGHT;
+          direction = DirectionType.RIGHT;
           break;
         case "s":
-          snake0.direction = DirectionType.DOWN;
+          direction = DirectionType.DOWN;
           break;
         case "a":
-          snake0.direction = DirectionType.LEFT;
+          direction = DirectionType.LEFT;
           break;
-        case "ArrowUp":
-          snake1.direction = DirectionType.UP;
-          break;
-        case "ArrowRight":
-          snake1.direction = DirectionType.RIGHT;
-          break;
-        case "ArrowDown":
-          snake1.direction = DirectionType.DOWN;
-          break;
-        case "ArrowLeft":
-          snake1.direction = DirectionType.LEFT;
-          break;
+      }
+
+      if (direction !== DirectionType.NONE) {
+        this.pkStore.socket?.send({
+          event: "move",
+          direction: direction.toString(),
+        });
       }
     });
   }
@@ -184,7 +135,7 @@ export class GameMap extends BaseGameObject {
   isBothSnakeReady() {
     for (const snake of this.snakeList) {
       const { status, direction } = snake;
-      if (status !== SnakeStatusType.IDLE || direction === DirectionType.NONE)
+      if (status !== SnakePkStatusType.IDLE || direction === DirectionType.NONE)
         return false;
     }
     return true;

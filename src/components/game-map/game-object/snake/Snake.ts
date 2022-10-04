@@ -1,7 +1,7 @@
 import { BaseGameObject } from "../BaseGameObject";
 import type { GameMap } from "../GameMap";
 import { SnakeCell } from "./SnakeCell";
-import { DirectionType, SnakeStatusType, type ISnakeInfo } from "./type";
+import { DirectionType, SnakePkStatusType, type ISnakeInfo } from "./type";
 import {
   Epsilon,
   EyeOffsetX,
@@ -21,7 +21,7 @@ export class Snake extends BaseGameObject {
 
   cellList: SnakeCell[]; // 存放蛇的身体，[0]存放蛇头
   nextCell: SnakeCell | null; // 下一步的蛇头结点
-  status: SnakeStatusType; // 蛇状态
+  status: SnakePkStatusType; // 蛇状态
   speed: number; // 蛇移动速度（x格子 / 秒）
   eyeDirection: number; // 蛇眼的方向
 
@@ -38,11 +38,11 @@ export class Snake extends BaseGameObject {
     this.nextCell = null;
     this.speed = 5;
     this.eyeDirection = id === 0 ? DirectionType.UP : DirectionType.DOWN;
-    this.status = SnakeStatusType.IDLE;
+    this.status = SnakePkStatusType.IDLE;
   }
 
   update() {
-    if (this.status === SnakeStatusType.MOVE) this.move();
+    if (this.status === SnakePkStatusType.MOVE) this.move();
 
     this.render();
   }
@@ -52,7 +52,7 @@ export class Snake extends BaseGameObject {
 
     // 绘制身体
     ctx.fillStyle =
-      this.status === SnakeStatusType.DIE ? snakeDieColor : this.color;
+      this.status === SnakePkStatusType.DIE ? snakeDieColor : this.color;
 
     this.cellList.forEach((cell) => {
       ctx.beginPath();
@@ -126,7 +126,7 @@ export class Snake extends BaseGameObject {
     if (distance < Epsilon) {
       this.cellList[0] = this.nextCell;
       this.nextCell = null;
-      this.status = SnakeStatusType.IDLE;
+      this.status = SnakePkStatusType.IDLE;
       if (!this.isSnakeNeedIncrease()) this.cellList.pop();
       return;
     }
@@ -154,14 +154,10 @@ export class Snake extends BaseGameObject {
     );
     this.eyeDirection = this.direction;
     this.direction = DirectionType.NONE;
-    this.status = SnakeStatusType.MOVE;
+    this.status = SnakePkStatusType.MOVE;
     this.curStep++;
 
     // 插入一个待移动的头结点
     this.cellList.splice(0, 0, JSON.parse(JSON.stringify(this.cellList[0])));
-
-    // 如果撞墙则死亡
-    if (!this.gameMap.isTargetCellValid(this.nextCell))
-      this.status = SnakeStatusType.DIE;
   }
 }

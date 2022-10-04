@@ -5,7 +5,7 @@ export interface ISnakeInfo {
   r: number;
 }
 
-export const enum SnakeStatusType {
+export const enum SnakePkStatusType {
   IDLE, // 静止
   MOVE, // 移动
   DIE, // 死亡

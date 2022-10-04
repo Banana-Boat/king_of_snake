@@ -24,13 +24,12 @@
         >
           <template #default="scope">
             <el-badge
-              v-if="scope.row.result === 'A胜'"
+              :hidden="scope.row.result !== 'A胜'"
               value="win"
               type="success"
             >
               {{ scope.row.a_username }}
             </el-badge>
-            <span v-else>{{ scope.row.a_username }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -41,13 +40,12 @@
         >
           <template #default="scope">
             <el-badge
-              v-if="scope.row.result === 'B胜'"
+              :hidden="scope.row.result !== 'B胜'"
               value="win"
               type="success"
             >
-              {{ scope.row.a_username }}
+              {{ scope.row.b_username }}
             </el-badge>
-            <span v-else>{{ scope.row.a_username }}</span>
           </template>
         </el-table-column>
         <el-table-column

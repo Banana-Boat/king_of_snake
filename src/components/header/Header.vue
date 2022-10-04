@@ -55,7 +55,7 @@
 import { ElMessage } from "element-plus";
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate, useRouter } from "vue-router";
-import { useUserStore } from "../../stores/user.store";
+import { useUserStore } from "../../stores/user/user.store";
 import LoginDrawer from "./components/LoginDrawer.vue";
 import RegisterDrawer from "./components/RegisterDrawer.vue";
 
@@ -88,8 +88,8 @@ const navClickHandle = (nav: INav) => {
 };
 
 const logout = () => {
-  userStore.reset();
-  localStorage.removeItem("jwt_token");
+  userStore.$reset();
+  sessionStorage.removeItem("jwt_token");
   ElMessage.success("注销成功");
 };
 </script>

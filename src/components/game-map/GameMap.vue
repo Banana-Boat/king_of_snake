@@ -7,12 +7,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { GameMap } from "./game-object/GameMap";
+import { usePkStore } from "../../stores/pk/pk.store";
 
 const parentNodeRef = ref<HTMLDivElement>(null);
 const canvasNodeRef = ref<HTMLCanvasElement>(null);
 
+const pkStore = usePkStore();
+
 onMounted(() => {
-  new GameMap(canvasNodeRef.value.getContext("2d"), parentNodeRef.value);
+  const gameMapObject = new GameMap(
+    canvasNodeRef.value.getContext("2d"),
+    parentNodeRef.value
+  );
+  pkStore.gameMapObject = gameMapObject;
 });
 </script>
 
