@@ -7,11 +7,14 @@ import type { SnakeCell } from "./snake/SnakeCell";
 import { usePkStore } from "@/stores/pk/pk.store";
 import type { Store } from "pinia";
 import type { IPkAction, IPkState } from "@/stores/pk/types";
+import type { IRecordAction, IRecordState } from "@/stores/record/types";
+import { useRecordStore } from "@/stores/record/record.store";
 
 export class GameMap extends BaseGameObject {
   ctx: CanvasRenderingContext2D; // 画布结点
   parent: HTMLDivElement; // 画布的父结点
   pkStore: Store<string, IPkState, {}, IPkAction>;
+  recordStore: Store<string, IRecordState, {}, IRecordAction>;
 
   pxPerGrid: number; // 一个格子所占的像素值
   cols: number; // 地图所占列数
@@ -29,6 +32,8 @@ export class GameMap extends BaseGameObject {
     this.ctx = ctx;
     this.parent = parent;
     this.pkStore = usePkStore();
+    this.recordStore = useRecordStore();
+
     this.pxPerGrid = 0;
     this.cols = 14;
     this.rows = 13;
@@ -98,32 +103,55 @@ export class GameMap extends BaseGameObject {
 
   // 添加键盘监听事件
   addKeyEventListener() {
-    this.ctx.canvas.focus();
+    if (this.recordStore.isRecord) {
+      let curStep = 0;
 
-    this.ctx.canvas.addEventListener("keydown", (e) => {
-      let direction = DirectionType.NONE;
-      switch (e.key) {
-        case "w":
-          direction = DirectionType.UP;
-          break;
-        case "d":
-          direction = DirectionType.RIGHT;
-          break;
-        case "s":
-          direction = DirectionType.DOWN;
-          break;
-        case "a":
-          direction = DirectionType.LEFT;
-          break;
-      }
+      const { aSteps, bSteps, loser } = this.recordStore;
+      const [snake0, snake1] = this.snakeList;
 
-      if (direction !== DirectionType.NONE) {
-        this.pkStore.socket?.send({
-          event: "move",
-          direction: direction.toString(),
-        });
-      }
-    });
+      const interval_id = setInterval(() => {
+        if (curStep >= aSteps.length - 1) {
+          if (loser === "all" || loser === "A") {
+            snake0.status = SnakePkStatusType.DIE;
+          }
+          if (loser === "all" || loser === "B") {
+            snake1.status = SnakePkStatusType.DIE;
+          }
+          clearInterval(interval_id);
+        } else {
+          snake0.direction = parseInt(aSteps[curStep]);
+          snake1.direction = parseInt(bSteps[curStep]);
+        }
+        curStep++;
+      }, 300);
+    } else {
+      this.ctx.canvas.focus();
+
+      this.ctx.canvas.addEventListener("keydown", (e) => {
+        let direction = DirectionType.NONE;
+        switch (e.key) {
+          case "w":
+            direction = DirectionType.UP;
+            break;
+          case "d":
+            direction = DirectionType.RIGHT;
+            break;
+          case "s":
+            direction = DirectionType.DOWN;
+            break;
+          case "a":
+            direction = DirectionType.LEFT;
+            break;
+        }
+
+        if (direction !== DirectionType.NONE) {
+          this.pkStore.socket?.send({
+            event: "move",
+            direction: direction.toString(),
+          });
+        }
+      });
+    }
   }
 
   // 进入下一回合

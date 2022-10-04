@@ -3,10 +3,10 @@ export interface RecordDetail {
   asteps: string;
   asx: number;
   asy: number;
-  bid: string;
+  bid: number;
   bsteps: string;
-  bsx: string;
-  bsy: string;
+  bsx: number;
+  bsy: number;
   createtime: string;
   id: number;
   loser: string;

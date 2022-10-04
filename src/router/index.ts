@@ -30,6 +30,13 @@ const router = createRouter({
       ),
     },
     {
+      path: "/record/:recordId/",
+      name: "recordReplay",
+      component: defineAsyncComponent(
+        () => import("@/views/record/RecordReplayView.vue")
+      ),
+    },
+    {
       path: "/404/",
       name: "404",
       component: () =>

@@ -61,9 +61,17 @@
           align="center"
         ></el-table-column>
         <el-table-column label="操作" min-width="100" align="center">
-          <el-button type="primary" round color="#5D53AB" size="small"
-            >查看录像</el-button
-          >
+          <template #default="scope">
+            <el-button
+              @click="replayBtnClickHandle(scope.row.record.id)"
+              type="primary"
+              round
+              color="#5D53AB"
+              size="small"
+            >
+              查看录像
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -84,6 +92,13 @@ import { onBeforeMount, reactive, ref } from "vue";
 import type { Record } from "./types";
 import { getRecordData } from "./apis";
 import { ElMessage } from "element-plus";
+import { useRecordStore } from "../../stores/record/record.store";
+import { usePkStore } from "../../stores/pk/pk.store";
+import { useRouter } from "vue-router";
+
+const recordStore = useRecordStore();
+const pkStore = usePkStore();
+const router = useRouter();
 
 const recordData = ref<Record[]>([]);
 const isLoading = ref(false);
@@ -117,6 +132,51 @@ onBeforeMount(() => {
 
 const curPageChangeHandle = (cur: number) => {
   updateRecordData(cur);
+};
+
+// 将地图字符串转换为二维地图矩阵
+const stringTo2D = (map: string): boolean[][] => {
+  let g = [];
+  for (let i = 0, k = 0; i < 13; i++) {
+    let line = [];
+    for (let j = 0; j < 14; j++, k++) {
+      if (map[k] === "0") line.push(0);
+      else line.push(1);
+    }
+    g.push(line);
+  }
+  return g;
+};
+
+const replayBtnClickHandle = (recordId) => {
+  const record = recordData.value.find((item) => item.record.id === recordId);
+  if (!record) return;
+
+  recordStore.$patch({
+    isRecord: true,
+    aName: record.a_username,
+    bName: record.b_username,
+    aSteps: record.record.asteps,
+    bSteps: record.record.bsteps,
+    loser: record.record.loser,
+  });
+
+  pkStore.updateGame({
+    map: stringTo2D(record.record.map),
+    a_id: record.record.aid,
+    a_sx: record.record.asx,
+    a_sy: record.record.asy,
+    b_id: record.record.bid,
+    b_sx: record.record.bsx,
+    b_sy: record.record.bsy,
+  });
+
+  router.push({
+    name: "recordReplay",
+    params: {
+      recordId,
+    },
+  });
 };
 </script>
 

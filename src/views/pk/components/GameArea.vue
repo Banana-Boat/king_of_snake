@@ -6,7 +6,7 @@
           {{ playerAName }}
         </span>
       </el-badge>
-      <div class="player-img">
+      <div class="oper-img">
         <ArrowIcon color="#329bea59" :direction="playerADirection" />
       </div>
     </div>
@@ -19,7 +19,7 @@
           {{ playerBName }}
         </span>
       </el-badge>
-      <div class="player-img">
+      <div class="oper-img">
         <ArrowIcon color="#e8646f5c" :direction="playerBDirection" />
       </div>
     </div>
@@ -41,7 +41,7 @@ const pkStore = usePkStore();
 const userStore = useUserStore();
 
 onUnmounted(() => {
-  pkStore.socket.close();
+  pkStore.socket?.close();
   pkStore.$reset();
 });
 
@@ -81,7 +81,7 @@ const playerBDirection = computed(() => {
   font-size: 24px;
   margin-bottom: 10px;
 }
-.player-img {
+.oper-img {
   width: 100px;
   height: 100px;
   margin-top: 20px;

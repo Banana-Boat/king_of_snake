@@ -15,16 +15,16 @@
       </template>
       <h2 style="text-align: center">游戏规则</h2>
       <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统随机生成一张地图，地图根据中心对称排布障碍物，且左下与右上两个位置连通。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统随机生成地图，根据中心对称排布障碍物。
       </p>
       <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;两名玩家所控制的蛇分别以左下、右上为起点进行移动，当蛇头撞击障碍物或蛇身即死亡。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;玩家通过“W”、“A“、”S”、“D”键操作蛇移动，当蛇头撞击障碍物或蛇身时死亡。
       </p>
       <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;前十个回合，双方的蛇每回合长度增加1；十个回合后，每三回合蛇长度增加1。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;前十回合，蛇每回合长度增加1；十回合后，每三回合蛇长度增加1。
       </p>
       <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;游戏存在平局，胜利方加3分，失败方减3分，平局则双方各加1分。
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;胜利方加5分，失败方减2分，平局则均不加分。
       </p>
     </el-popover>
     <GameArea v-if="pkStore.status === PkStatusType.PLAYING" />
