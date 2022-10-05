@@ -30,7 +30,6 @@ import { useUserStore } from "../../../stores/user/user.store";
 import { usePkStore } from "../../../stores/pk/pk.store";
 import { ElMessage } from "element-plus";
 import { computed } from "vue-demi";
-import { socketUrl } from "../constans";
 import { PkSocket } from "../PkSocket";
 import { PkStatusType } from "../../../stores/pk/types";
 
@@ -56,10 +55,8 @@ const matchBtnHandle = () => {
     return;
   }
 
-  // 已经登录
-  const socket = new WebSocket(socketUrl + userStore.token + "/");
-  pkSocket = new PkSocket(socket);
-
+  // 已经登录，创建socket连接
+  pkSocket = new PkSocket();
   pkSocket.matchBtnHandle();
 };
 </script>

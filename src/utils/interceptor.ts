@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 import { useUserStore } from "@/stores/user/user.store";
 
 const instance = axios.create({
-  baseURL: "https://app2703.acapp.acwing.com.cn/api",
+  baseURL: import.meta.env.VITE_APP_BASEURL,
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
   },

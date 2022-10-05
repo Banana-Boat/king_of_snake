@@ -11,14 +11,17 @@ export class PkSocket {
   pkStore: Store<string, IPkState, {}, IPkAction>;
   userStore: Store<string, IUserState, {}, IUserAction>;
 
-  constructor(socket: WebSocket) {
-    this.socket = socket;
+  constructor() {
     this.pkStore = usePkStore();
     this.userStore = useUserStore();
 
+    this.socket = new WebSocket(
+      import.meta.env.VITE_APP_SOCKETURL + this.userStore.token + "/"
+    );
+
     this.pkStore.socket = this;
 
-    socket.onmessage = (msg) => {
+    this.socket.onmessage = (msg) => {
       const data = JSON.parse(msg.data);
 
       const snakeList = this.pkStore.gameMapObject?.snakeList;

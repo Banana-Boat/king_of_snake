@@ -45,7 +45,7 @@ export const login = async (params: LoginRequest) =>
         const { token } = res;
 
         userStore.token = token;
-        sessionStorage.setItem("jwt_token", token);
+        localStorage.setItem("jwt_token", token);
 
         return await getUserInfo();
       }

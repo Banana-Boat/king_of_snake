@@ -89,7 +89,7 @@ const navClickHandle = (nav: INav) => {
 
 const logout = () => {
   userStore.$reset();
-  sessionStorage.removeItem("jwt_token");
+  localStorage.removeItem("jwt_token");
   ElMessage.success("注销成功");
 };
 </script>

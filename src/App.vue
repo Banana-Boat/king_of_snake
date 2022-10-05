@@ -11,7 +11,7 @@ import { useUserStore } from "./stores/user/user.store";
 
 const userStore = useUserStore();
 
-const token = sessionStorage.getItem("jwt_token");
+const token = localStorage.getItem("jwt_token");
 if (token) {
   userStore.token = token;
   try {
