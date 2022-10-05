@@ -16,7 +16,7 @@
       :model="formData"
       :rules="rules"
       status-icon
-      @keydown="onSubmit(formRef)"
+      @keypress.enter="onSubmit(formRef)"
     >
       <el-form-item label="用户名" size="large" prop="name">
         <el-input
