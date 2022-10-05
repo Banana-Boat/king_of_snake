@@ -16,7 +16,7 @@ export class PkSocket {
     this.userStore = useUserStore();
 
     this.socket = new WebSocket(
-      import.meta.env.VITE_APP_SOCKETURL + this.userStore.token + "/"
+      import.meta.env.VITE_SOCKETURL + this.userStore.token + "/"
     );
 
     this.pkStore.socket = this;
