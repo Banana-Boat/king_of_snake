@@ -47,10 +47,9 @@ let pkSocket: PkSocket;
 const matchBtnHandle = () => {
   // 尚未登录
   if (!userStore.isLogin) {
-    ElMessage({
+    ElMessage.error({
       message: "您还未登录，请先登录！",
-      type: "error",
-      duration: 2000,
+      duration: 1500,
     });
     return;
   }

@@ -17,6 +17,13 @@
         fit
       >
         <el-table-column
+          type="index"
+          :index="getRankIndex"
+          label="名次"
+          min-width="100"
+          align="center"
+        ></el-table-column>
+        <el-table-column
           prop="username"
           label="玩家名称"
           min-width="100"
@@ -47,6 +54,7 @@ import { onBeforeMount, reactive, ref } from "vue";
 import type { User } from "./types";
 import { getRankListData } from "./apis";
 import { ElMessage } from "element-plus";
+import { PAGE_SIZE } from "./constants";
 
 const rankListData = ref<User[]>([]);
 const isLoading = ref(false);
@@ -54,6 +62,11 @@ const pagination = reactive({
   cur: 1,
   total: 0,
 });
+
+// 获取排名
+const getRankIndex = (index: number) => {
+  return (pagination.cur - 1) * PAGE_SIZE + index + 1;
+};
 
 const updateRankListData = async (page: number) => {
   try {
@@ -68,7 +81,10 @@ const updateRankListData = async (page: number) => {
     rankListData.value = [];
     pagination.cur = 1;
     pagination.total = 0;
-    ElMessage.error("数据获取失败，请重试");
+    ElMessage.error({
+      message: "数据获取失败，请重试",
+      duration: 1500,
+    });
   } finally {
     isLoading.value = false;
   }

@@ -32,7 +32,10 @@ instance.interceptors.response.use(
     const { error_message: msg } = response.data;
 
     if (msg && msg !== "success") {
-      ElMessage.error(msg);
+      ElMessage.error({
+        message: msg,
+        duration: 1500,
+      });
       return false;
     }
 

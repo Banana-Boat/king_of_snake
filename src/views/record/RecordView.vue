@@ -120,7 +120,10 @@ const updateRecordData = async (page: number) => {
     recordData.value = [];
     pagination.cur = 1;
     pagination.total = 0;
-    ElMessage.error("数据获取失败，请重试");
+    ElMessage.error({
+      message: "数据获取失败，请重试",
+      duration: 1500,
+    });
   } finally {
     isLoading.value = false;
   }
