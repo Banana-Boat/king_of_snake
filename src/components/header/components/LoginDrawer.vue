@@ -5,6 +5,11 @@
     destroy-on-close
     :with-header="false"
     size="440px"
+    @opened="
+      () => {
+        nameInputRef.focus();
+      }
+    "
   >
     <div class="logo-title">
       <img src="@/assets/images/logo_128.png" style="width: 100px" />
@@ -20,6 +25,7 @@
     >
       <el-form-item label="用户名" size="large" prop="name">
         <el-input
+          ref="nameInputRef"
           v-model="formData.name"
           placeholder="请输入用户名"
           clearable
@@ -77,6 +83,7 @@ const formData = reactive({
 const isLoginBtnLoading = ref(false);
 
 const formRef = ref<FormInstance>();
+const nameInputRef = ref();
 
 const rules = reactive<FormRules>({
   name: [{ required: true, message: "用户名不可为空", trigger: "blur" }],
