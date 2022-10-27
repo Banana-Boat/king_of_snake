@@ -9,6 +9,7 @@ import type { Store } from "pinia";
 import type { IPkAction, IPkState } from "@/stores/pk/types";
 import type { IRecordAction, IRecordState } from "@/stores/record/types";
 import { useRecordStore } from "@/stores/record/record.store";
+import { reverseDirection } from "@/utils/utils";
 
 export class GameMap extends BaseGameObject {
   ctx: CanvasRenderingContext2D; // 画布结点
@@ -142,7 +143,24 @@ export class GameMap extends BaseGameObject {
           case "a":
             direction = DirectionType.LEFT;
             break;
+          case "ArrowUp":
+            direction = DirectionType.UP;
+            break;
+          case "ArrowDown":
+            direction = DirectionType.DOWN;
+            break;
+          case "ArrowLeft":
+            direction = DirectionType.LEFT;
+            break;
+          case "ArrowRight":
+            direction = DirectionType.RIGHT;
+            break;
         }
+
+        direction =
+          this.pkStore.selfIndex === "A"
+            ? direction
+            : reverseDirection(direction);
 
         if (direction !== DirectionType.NONE) {
           this.pkStore.socket?.send({

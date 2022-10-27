@@ -3,6 +3,7 @@ import { usePkStore } from "@/stores/pk/pk.store";
 import { PkStatusType, type IPkAction, type IPkState } from "@/stores/pk/types";
 import type { IUserAction, IUserState } from "@/stores/user/types";
 import { useUserStore } from "@/stores/user/user.store";
+import { reverseDirection } from "@/utils/utils";
 import { ElMessage } from "element-plus";
 import type { Store } from "pinia";
 
@@ -47,9 +48,14 @@ export class PkSocket {
           this.pkStore.updateDirection("B", data.b_direction);
 
           if (snakeList) {
-            const [snake0, snake1] = snakeList;
-            snake0.direction = data.a_direction;
-            snake1.direction = data.b_direction;
+            const [snake0, snake1] = snakeList; // snake0为自己
+            if (this.pkStore.selfIndex === "A") {
+              snake0.direction = data.a_direction;
+              snake1.direction = data.b_direction;
+            } else {
+              snake0.direction = reverseDirection(data.b_direction);
+              snake1.direction = reverseDirection(data.a_direction);
+            }
           }
           break;
 
@@ -57,10 +63,14 @@ export class PkSocket {
           if (snakeList) {
             const [snake0, snake1] = snakeList;
 
-            if (data.loser === "all" || data.loser === "A") {
+            if (data.loser === "all") {
               snake0.status = SnakePkStatusType.DIE;
+              snake1.status = SnakePkStatusType.DIE;
             }
-            if (data.loser === "all" || data.loser === "B") {
+
+            if (data.loser === this.pkStore.selfIndex) {
+              snake0.status = SnakePkStatusType.DIE;
+            } else {
               snake1.status = SnakePkStatusType.DIE;
             }
           }

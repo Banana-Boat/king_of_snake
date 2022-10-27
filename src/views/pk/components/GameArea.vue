@@ -1,26 +1,24 @@
 <template>
   <div class="main">
     <div class="player-info">
-      <el-badge value="我" type="warning" :hidden="pkStore.selfIndex !== 'A'">
+      <el-badge value="我" type="warning">
         <span class="player-name" style="color: #329bea">
-          {{ playerAName }}
+          {{ userStore.name }}
         </span>
       </el-badge>
       <div class="oper-img">
-        <ArrowIcon color="#329bea59" :direction="playerADirection" />
+        <ArrowIcon color="#329bea59" :direction="userDirection" />
       </div>
     </div>
 
     <GameMap />
 
     <div class="player-info">
-      <el-badge value="我" type="warning" :hidden="pkStore.selfIndex !== 'B'">
-        <span class="player-name" style="color: #e8646f">
-          {{ playerBName }}
-        </span>
-      </el-badge>
+      <span class="player-name" style="color: #e8646f">
+        {{ pkStore.rivalName }}
+      </span>
       <div class="oper-img">
-        <ArrowIcon color="#e8646f5c" :direction="playerBDirection" />
+        <ArrowIcon color="#e8646f5c" :direction="rivalDirection" />
       </div>
     </div>
 
@@ -36,6 +34,7 @@ import { DirectionType } from "../../../components/game-map/game-object/snake/ty
 import { computed, onUnmounted, ref, watch } from "vue";
 import { usePkStore } from "../../../stores/pk/pk.store";
 import { useUserStore } from "../../../stores/user/user.store";
+import { reverseDirection } from "../../../utils/utils";
 
 const pkStore = usePkStore();
 const userStore = useUserStore();
@@ -45,22 +44,16 @@ onUnmounted(() => {
   pkStore.$reset();
 });
 
-const playerAName = computed(() => {
-  if (pkStore.selfIndex === "A") return userStore.name;
-  else return pkStore.rivalName;
+const userDirection = computed(() => {
+  return pkStore.selfIndex === "A"
+    ? pkStore.playerAInfo.curDirection
+    : reverseDirection(pkStore.playerBInfo.curDirection);
 });
 
-const playerADirection = computed(() => {
-  return pkStore.playerAInfo.curDirection;
-});
-
-const playerBName = computed(() => {
-  if (pkStore.selfIndex === "B") return userStore.name;
-  else return pkStore.rivalName;
-});
-
-const playerBDirection = computed(() => {
-  return pkStore.playerBInfo.curDirection;
+const rivalDirection = computed(() => {
+  return pkStore.selfIndex === "A"
+    ? pkStore.playerBInfo.curDirection
+    : reverseDirection(pkStore.playerAInfo.curDirection);
 });
 </script>
 
